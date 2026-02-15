@@ -3,7 +3,7 @@ import ast
 
 from utils.get_function_name import get_function_name
 
-from models import   make_issue
+from models import  make_issue
 
 
 def detect_insecure_serialization(code, file_path="<unknown>"):
