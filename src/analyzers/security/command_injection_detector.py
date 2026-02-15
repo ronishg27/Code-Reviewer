@@ -1,17 +1,9 @@
 import ast
 
 
+from ...models import Issue
+from utils import get_function_name
 
-
-
-def _get_function_name( node):
-    """Extract full function name from AST node."""
-    if isinstance(node, ast.Name):
-        return node.id
-    elif isinstance(node, ast.Attribute):
-        value = _get_function_name(node.value)
-        return f"{value}.{node.attr}" if value else node.attr
-    return ""
 
 def detect_command_injection(code:str, file_path:str="unknown") :
     """
@@ -34,15 +26,13 @@ def detect_command_injection(code:str, file_path:str="unknown") :
     # Parse the code into an AST
     tree= ast.parse(code)
 
-    
-
     # Walk through the AST nodes to find function calls
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
             continue
         
         # Get the full function name being called
-        func_name = _get_function_name(node.func)
+        func_name = get_function_name(node.func)
 
         # Check if the function is in the list of dangerous functions
         if func_name not in DANGEROUS_FUNCTIONS:
