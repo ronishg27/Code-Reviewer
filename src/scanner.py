@@ -148,9 +148,9 @@ class ScanResult:
                     if verbose:
                         print(f"  Recommendation: {issue.recommendation}")
     
-    def to_json(self) -> str:
-        """Export results as JSON."""
-        data = {
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert results to a dictionary."""
+        return{
             'file_path': self.file_path,
             'total_issues': self.total_issues,
             'issues': [
@@ -170,8 +170,10 @@ class ScanResult:
             },
             'summary': self.get_metrics_summary(),
         }
-        return json.dumps(data, indent=2)
-
+    
+    def to_json(self) -> str:
+        """Export results as JSON."""
+        return json.dumps(self.to_dict(), indent=2)
 
 class SecurityScanner:
     """Unified security and quality scanner."""

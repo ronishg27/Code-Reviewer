@@ -1,0 +1,100 @@
+{
+  "repo_url": "https://github.com/ronishg27/code-reviewer",
+  "total_files": 9,
+  "scanned_files": 3,
+  "total_issues": 0,
+  "has_critical": false,
+  "critical_count": 0,
+  "high_count": 0,
+  "summary": {
+    "repo_url": "https://github.com/ronishg27/code-reviewer",
+    "files_analyzed": 3,
+    "total_issues": 0,
+    "by_severity": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "MEDIUM": 0,
+      "LOW": 0,
+      "INFO": 0
+    },
+    "has_critical": false
+  },
+  "top_issues": [],
+  "files": {
+    "src/analyzers/security/__init__.py": {
+      "file_path": "src/analyzers/security/__init__.py",
+      "total_issues": 0,
+      "issues": [],
+      "metrics": {},
+      "summary": {
+        "num_functions": 0,
+        "avg_complexity": 0.0,
+        "avg_loc": 0.0,
+        "avg_maintainability": 0.0,
+        "high_complexity_count": 0,
+        "long_function_count": 0
+      }
+    },
+    "src/main.py": {
+      "file_path": "src/main.py",
+      "total_issues": 0,
+      "issues": [],
+      "metrics": {},
+      "summary": {
+        "num_functions": 0,
+        "avg_complexity": 0.0,
+        "avg_loc": 0.0,
+        "avg_maintainability": 0.0,
+        "high_complexity_count": 0,
+        "long_function_count": 0
+      }
+    },
+    "src/models/issue_model.py": {
+      "file_path": "src/models/issue_model.py",
+      "total_issues": 0,
+      "issues": [],
+      "metrics": {
+        "make_issue": {
+          "target": "make_issue",
+          "level": "function",
+          "line": 15,
+          "size": {
+            "lines_of_code": 9,
+            "logical_lines": 1,
+            "comment_lines": 0,
+            "blank_lines": 0
+          },
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0
+          },
+          "maintainability": {
+            "index": 66
+          },
+          "structure": {
+            "nesting_depth": 1,
+            "parameters": 7,
+            "returns": 1
+          },
+          "custom": {}
+        }
+      },
+      "summary": {
+        "num_functions": 1,
+        "avg_complexity": 1.0,
+        "avg_loc": 9.0,
+        "avg_maintainability": 66.0,
+        "high_complexity_count": 0,
+        "long_function_count": 0
+      }
+    }
+  },
+  "fetch_errors": [
+    "Error scanning src/analyzers/security/command_injection_detector.py: 'NoneType' object is not iterable",
+    "Error scanning src/analyzers/security/hardcoded_secrets_detector.py: 'NoneType' object is not iterable",
+    "Error scanning src/analyzers/security/insecure_serialization_detector.py: 'SQLInjectionDetector' object has no attribute '_get_full_attribute_name'",
+    "Error scanning src/models/__init__.py: 'NoneType' object is not iterable",
+    "Error scanning src/utils/__init__.py: 'NoneType' object is not iterable",
+    "Error scanning src/utils/get_function_name.py: 'NoneType' object is not iterable"
+  ]
+}

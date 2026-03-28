@@ -409,21 +409,10 @@ class DangerousFunctionsDetector(BaseDetector):
             
             self.report_issue(node, report_rule, func_name)
 
-        except (AttributeError, KeyError, IndexError, TypeError, ValueError) as e:
-            # Log error but don't crash
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} error at line {getattr(node, 'lineno', '?')}: {e}",
-                RuntimeWarning
-            )
-            return
+
         except Exception as e:
-            # Catch-all for unexpected errors
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} unexpected error: {e}",
-                RuntimeWarning
-            )
+            import logging
+            logging.warning(f"Dangerous functions detector error at line {node.lineno}: {e}")
             return
     
     def _has_dynamic_input(self, node: ast.Call) -> bool:
@@ -610,23 +599,23 @@ def save_data(data):
     print("-" * 80)
     print("""
 CODE EXECUTION (Always Dangerous):
-  • eval(), exec() → Use ast.literal_eval() or dispatch tables
-  • compile() → Avoid with untrusted input
-  • __import__() → Use importlib with allowlist
+  • eval(), exec() -> Use ast.literal_eval() or dispatch tables
+  • compile() -> Avoid with untrusted input
+  • __import__() -> Use importlib with allowlist
 
 REFLECTION (Dangerous with Dynamic Input):
-  • getattr/setattr/delattr → Validate attribute names
-  • globals()/locals() → Use explicit dictionaries
+  • getattr/setattr/delattr -> Validate attribute names
+  • globals()/locals() -> Use explicit dictionaries
 
 FILE SYSTEM (Validate Paths):
-  • open(), os.remove(), shutil.rmtree() → Sanitize paths
+  • open(), os.remove(), shutil.rmtree() -> Sanitize paths
   • Use os.path.realpath() + base directory check
 
 NETWORK (SSRF Risk):
-  • requests.*, urllib.* → Validate URLs against allowlist
+  • requests.*, urllib.* -> Validate URLs against allowlist
   • Block internal/private IP addresses
 
 WEB FRAMEWORKS:
-  • send_file() → Use send_from_directory() with validation
+  • send_file() -> Use send_from_directory() with validation
   • Validate all user-controlled paths
 """)

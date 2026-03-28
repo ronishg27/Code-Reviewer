@@ -38,17 +38,30 @@ class SQLInjectionDetector(BaseDetector):
             message="SQL query uses .format() method",
             recommendation="Use parameterized queries instead of .format()"
         ),
+
+        'tainted_direct': Rule(
+            severity= Severity.CRITICAL,
+            message="SQL query is directly tainted by user input",
+            recommendation="Use parameterized queries with placeholders "
+        ),
+
+        'tainted_propagated':Rule(
+            severity=Severity.CRITICAL,
+            message="SQL query uses variable containing user input",
+            recommendation="Use parameterized queries. Avoid string concatenation or formatting with user input."
+        )
     }
     
     SAFE_PARAM_KEYWORDS: Set[str] = {'params', 'parameters', 'args', 'bind'}
     
     def _on_call(self, node: ast.Call, func_name: str, resolved_name: str) -> None:
         """Check SQL method calls for injection vulnerabilities."""
-        try: 
-            method_name = resolved_name.split('.')[-1]
+        method_name = resolved_name.split('.')[-1]
             
-            if method_name not in self.SQL_SINK_METHODS:
-                return
+        if method_name not in self.SQL_SINK_METHODS:
+            return
+        
+        try: 
             
             if self._has_safe_parameters(node):
                 return
@@ -57,23 +70,39 @@ class SQLInjectionDetector(BaseDetector):
             if not query_arg:
                 return
             
+            # Context-aware check: Does the query use tainted variables?
+            tainted_vars = self.get_tainted_variables_in_expression(query_arg)
+
+            if tainted_vars:
+                # build detailed message
+                taint_info  = tainted_vars[0]  # Get the first tainted variable for reporting
+
+                if taint_info.data_flow:
+                    # taint was propagated through multiple steps
+                    flow_chain = " -> ".join(taint_info.data_flow + [taint_info.name])
+                    additional = f"(tainted data flow: {flow_chain} from {taint_info.taint_source}) "
+                    self.report_issue(node, self.RULES['tainted_propagated'], func_name, additional_message=additional)
+
+                    
+                else:
+                    # direct use of taint variables
+                    additional = f"(variable '{taint_info.name}' is tainted from {taint_info.taint_source}) "
+
+                    self.report_issue(
+                        node,
+                        self.RULES['tainted_direct'],
+                        func_name=func_name,
+                        additional_message=additional,
+                    )
+                
+                return
+                
+            # fallback to pattern-based detection
             self._check_query_vulnerability(node, query_arg, func_name)
-        
-        except (AttributeError, KeyError, IndexError, TypeError, ValueError) as e:
-            # Log error but don't crash
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} error at line {getattr(node, 'lineno', '?')}: {e}",
-                RuntimeWarning
-            )
-            return
+
         except Exception as e:
-            # Catch-all for unexpected errors
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} unexpected error: {e}",
-                RuntimeWarning
-            )
+            import logging
+            logging.warning(f"SQL detector error at line {node.lineno}: {e}")
             return
     
     def _get_query_argument(self, node: ast.Call) -> Optional[ast.AST]:
@@ -98,7 +127,8 @@ class SQLInjectionDetector(BaseDetector):
             return True
         
         return any(kw.arg in self.SAFE_PARAM_KEYWORDS for kw in node.keywords)
-    
+
+
     def _check_query_vulnerability(
         self,
         node: ast.Call,

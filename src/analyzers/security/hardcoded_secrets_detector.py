@@ -375,21 +375,10 @@ class HardcodedSecretsDetector(BaseDetector):
             if resolved_name in {'connect', 'create_engine', 'Connection'}:
                 self._check_connection_arguments(node, func_name)
 
-        except (AttributeError, KeyError, IndexError, TypeError, ValueError) as e:
-            # Log error but don't crash
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} error at line {getattr(node, 'lineno', '?')}: {e}",
-                RuntimeWarning
-            )
-            return
+
         except Exception as e:
-            # Catch-all for unexpected errors
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} unexpected error: {e}",
-                RuntimeWarning
-            )
+            import logging
+            logging.warning(f"Hardcoded secrets detector error at line {node.lineno}: {e}")
             return
     
     def _on_assign(self, node: ast.Assign) -> None:

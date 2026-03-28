@@ -110,20 +110,11 @@ class WeakRandomDetector(BaseDetector):
             context = self.get_context_string()
             self.report_issue(node, rule, func_name, context, severity)
 
-        except (AttributeError, KeyError, IndexError, TypeError, ValueError) as e:
-            # Log error but don't crash
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} error at line {getattr(node, 'lineno', '?')}: {e}",
-                RuntimeWarning
-            )
-            return
+
         except Exception as e:
-            # Catch-all for unexpected errors
-            import warnings
-            warnings.warn(
-                f"{self.DETECTOR_NAME} unexpected error: {e}",
-                RuntimeWarning
+            import logging
+            logging.warning(
+                f"Error analyzing {func_name} at line {node.lineno}: {e}"
             )
             return
     
