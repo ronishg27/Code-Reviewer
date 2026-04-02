@@ -15,7 +15,7 @@ class MetricLevel(Enum):
 
 @dataclass
 class MetricResult:
-    """Result of a metric calculation."""
+    """Metric calculation result."""
     name: str
     value: float
     level: MetricLevel
