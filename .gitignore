@@ -243,6 +243,7 @@ env/
 *.swp
 *.swo
 *~
+AGENTS.md
 
 # Environment variables
 .env
@@ -274,3 +275,6 @@ __pycache__/
 .idea/
 .vscode/
 outputs/
+
+my_repo_analysis.json
+src/utils/fetch_repo.txt

@@ -198,6 +198,6 @@ def _update_metrics(metrics: CodeMetrics, result: MetricResult) -> None:
     }
     
     if result.name in mapping:
-        setattr(metrics, mapping[result.name], int(result.value))
+        setattr(metrics, mapping[result.name], float(result.value))
     else:
         metrics.custom_metrics[result.name] = result.value

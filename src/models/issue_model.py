@@ -13,7 +13,6 @@ class Issue:
     recommendation: str
     category: Literal["SECURITY", "CODE_QUALITY", "PERFORMANCE", "PARSING", "METRICS", "OTHER"]
 
-    # NEW fields
     id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
     confidence: float = 1.0  # 0.0 to 1.0
     code_snippet: Optional[str] = None
@@ -32,9 +31,9 @@ def make_issue(
         filename: str,
         line: int, rule: str,
         function: str,
-        severity: Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"], 
+        severity: Literal["LOW", "MEDIUM", "HIGH", "CRITICAL", "INFO", "ERROR"], 
         message: str, recommendation: str,
-        category: Literal["SECURITY", "CODE_QUALITY", "PERFORMANCE"]
+        category: Literal["SECURITY", "CODE_QUALITY", "PERFORMANCE", "PARSING", "METRICS", "OTHER"]
         ) -> Issue:
     return Issue(
         filename=filename,

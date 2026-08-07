@@ -1,9 +1,9 @@
 import ast
-from typing import Dict, Iterable, Set, List, Optional
+from typing import Dict, Iterable
 from dataclasses import dataclass
 
 from src.analyzers.security.base import BaseDetector, Rule, Severity, run_detector
-from src.models import make_issue, Issue
+from src.models import Issue
 
 
 @dataclass
@@ -599,23 +599,23 @@ def save_data(data):
     print("-" * 80)
     print("""
 CODE EXECUTION (Always Dangerous):
-  • eval(), exec() -> Use ast.literal_eval() or dispatch tables
-  • compile() -> Avoid with untrusted input
-  • __import__() -> Use importlib with allowlist
+  - eval(), exec() -> Use ast.literal_eval() or dispatch tables
+  - compile() -> Avoid with untrusted input
+  - __import__() -> Use importlib with allowlist
 
 REFLECTION (Dangerous with Dynamic Input):
-  • getattr/setattr/delattr -> Validate attribute names
-  • globals()/locals() -> Use explicit dictionaries
+  - getattr/setattr/delattr -> Validate attribute names
+  - globals()/locals() -> Use explicit dictionaries
 
 FILE SYSTEM (Validate Paths):
-  • open(), os.remove(), shutil.rmtree() -> Sanitize paths
-  • Use os.path.realpath() + base directory check
+  - open(), os.remove(), shutil.rmtree() -> Sanitize paths
+  - Use os.path.realpath() + base directory check
 
 NETWORK (SSRF Risk):
-  • requests.*, urllib.* -> Validate URLs against allowlist
-  • Block internal/private IP addresses
+  - requests.*, urllib.* -> Validate URLs against allowlist
+  - Block internal/private IP addresses
 
 WEB FRAMEWORKS:
-  • send_file() -> Use send_from_directory() with validation
-  • Validate all user-controlled paths
+  - send_file() -> Use send_from_directory() with validation
+  - Validate all user-controlled paths
 """)
