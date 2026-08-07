@@ -1,1 +1,3 @@
-    
+"""
+This package contains all the analyzers for code review. Each analyzer is responsible for analyzing a specific aspect of the code, such as security, code quality, performance, parsing, and metrics. The analyzers use various techniques to identify issues in the code and generate reports that can be used by developers to improve their code. The analyzers are designed to be modular and extensible, allowing for easy addition of new analyzers in the future.
+"""

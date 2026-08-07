@@ -353,61 +353,13 @@ class BaseDetector(ast.NodeVisitor, ABC):
         return func_name
     
     def resolve_variable(self, name:ast.AST) -> Optional[ast.AST]:
-        """Resolve a variable name to its assigned value.         """
+        """Resolve a variable name to its assigned value. """
 
         if name in self.variable_contexts:
             return self.variable_contexts[name].value_node
         
         return None
         
-        # """
-        # Resolve a variable name to its assigned value.
-        
-        # Args:
-        #     name: Variable name to resolve
-        #     max_depth: Maximum recursion depth
-        #     _seen: Set of already seen variables (prevents cycles)
-        
-        # Returns:
-        #     AST node of the resolved value, or None
-        # """
-        # if _seen is None:
-        #     _seen = set()
-        
-        # # Prevent infinite recursion
-        # if name in _seen or len(_seen) >= max_depth:
-        #     return None
-        
-        # _seen.add(name)
-        
-        # value = self.variable_assignments.get(name)
-        # if value is None:
-        #     return None
-        
-        # # If value is another variable, resolve it
-        # if isinstance(value, ast.Name):
-        #     return self.resolve_variable(value.id, max_depth, _seen)
-        
-        # return value
-    
-    # def is_tainted(self, name: str) -> bool:
-    #     """Check if a variable is potentially tainted."""
-    #     return name in self.tainted_variables
-    
-    # def _is_tainted_value(self, node: ast.AST) -> bool:
-    #     """Check if a value comes from a tainted source."""
-    #     if isinstance(node, ast.Call):
-    #         func_name = get_function_name(node.func)
-    #         if func_name:
-    #             tainted_sources = {
-    #                 'input', 'raw_input',
-    #                 'sys.stdin.read', 'sys.stdin.readline',
-    #                 'request.args.get', 'request.form.get',
-    #                 'request.GET.get', 'request.POST.get',
-    #                 'os.environ.get', 'os.getenv'
-    #             }
-    #             return any(func_name.endswith(src) for src in tainted_sources)
-    #     return False
     
     def is_dynamic_value(self, node: ast.AST) -> bool:
         """Check if a node represents a dynamic/computed value."""
